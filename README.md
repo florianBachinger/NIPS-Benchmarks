@@ -78,9 +78,9 @@ Image shows the validation $R^2$ for different training set sizes and noise leve
 If the python package is hosted on a repository, you can install directly using:
 
 ```sh
-pip install git+https://github.com/florianBachinger/SCR-Benchmarks-NIPS.git
+pip install git+https://github.com/florianBachinger/SCR-Benchmarks.git
 ```
-(you may need to run `pip` with root permission: `sudo pip install git+https://github.com/florianBachinger/SCR-Benchmarks-NIPS.git`)
+(you may need to run `pip` with root permission: `sudo pip install git+https://github.com/florianBachinger/SCR-Benchmarks.git`)
 
 Then import the package:
 ```python
