@@ -49,8 +49,8 @@ def simple_sampling(sample_size, min_value=0.0, max_value=1.0):
     # x ~ either U(0.0, 1.0) or U(-1.0, 0.) with 50% chance
     num_positives = sum(np.random.uniform(0.0, 1.0, size=sample_size) > 0.5)
     num_negatives = sample_size - num_positives
-    pos_samples = np.random.uniform(min_value, max_value, size=num_positives)
-    neg_samples = -np.random.uniform(min_value, max_value, size=num_negatives)
+    pos_samples = simple_positive_sampling(sample_size, min_value=min_value, max_value=max_value)
+    neg_samples = simple_negative_sampling(sample_size, min_value=min_value, max_value=max_value)
     all_samples = np.concatenate([pos_samples, neg_samples])
     np.random.shuffle(all_samples)
     return all_samples
@@ -59,13 +59,13 @@ def simple_sampling(sample_size, min_value=0.0, max_value=1.0):
 @register_sampling_func
 def simple_positive_sampling(sample_size, min_value=0.0, max_value=1.0):
     # x ~ U(0.0, 1.0)
-    return np.random.uniform(min_value, max_value, size=sample_size)
+    return np.concat([[min_value],np.random.uniform(min_value, max_value, size=sample_size-2), [max_value]])
 
 
 @register_sampling_func
 def simple_negative_sampling(sample_size, min_value=-1.0, max_value=0.0):
     # x ~ U(-1, 0.0)
-    return -np.random.uniform(min_value, max_value, size=sample_size)
+    return np.concat([[min_value],-np.random.uniform(min_value, max_value, size=sample_size-2), [max_value]])
 
 
 @register_sampling_func

@@ -17,13 +17,11 @@ def CalculateEquation(equation_class, text_file):
                  for (var,var_display_name) 
                  in list(zip(scr.equation.x, scr.equation.get_var_names()))]
   
-  f_prime_mat = [[ (sympy.Derivative(f_prime, var).doit(), [prime_var_name,var.name], [prime_var_display_name,var_display_name], 2 ) 
-                    for (var,var_display_name)  
-                    in list(zip(scr.equation.x, scr.equation.get_var_names()))] 
-                  for (f_prime, prime_var_name, prime_var_display_name, _) 
-                  in f_primes]
-  f_prime_mat_flattened = [item for sublist in f_prime_mat for item in sublist]
-  derviatives = f_primes+f_prime_mat_flattened
+  f_seconds = [(sympy.Derivative(scr.equation.sympy_eq, var).doit(),var.name, var_display_name, 2) 
+                 for (var,var_display_name) 
+                 in list(zip(scr.equation.x, scr.equation.get_var_names()))]
+  
+  derviatives = f_primes+f_seconds
 
   split_objectives = []
   constraints = []
@@ -72,13 +70,15 @@ def CalculateEquation(equation_class, text_file):
       descriptor =  get_constraint_descriptor(derivative, scr.equation.x, xs)
       print(f'> partial derivative over ({var_name}) with space {sampling_space} with constraint ({descriptor})')
       if(descriptor != sk.EQUATION_CONSTRAINTS_DESCRIPTOR_NO_CONSTRAINT):
-        constraints.append({sk.EQUATION_CONSTRAINTS_VAR_NAME_KEY: var_name,
+        constraints.append({
+          sk.EQUATION_CONSTRAINTS_VAR_NAME_KEY: var_name,
           sk.EQUATION_CONSTRAINTS_VAR_DISPLAY_NAME_KEY:var_display_name,
           sk.EQUATION_CONSTRAINTS_ORDER_DERIVATIVE_KEY:order_derivative,
           sk.EQUATION_CONSTRAINTS_DESCRIPTOR_KEY: descriptor,
           sk.EQUATION_CONSTRAINTS_DERIVATIVE_KEY: str(derivative),
           sk.EQUATION_CONSTRAINTS_SAMPLE_SPACE_KEY: sampling_space,
-          sk.EQUATION_CONSTRAINTS_ID_KEY: constraint_id  })
+          sk.EQUATION_CONSTRAINTS_ID_KEY: constraint_id  
+          })
         constraint_id = constraint_id + 1
 
   text_file.write(str( {sk.EQUATION_EQUATION_NAME_KEY:scr.equation.get_eq_name(),
