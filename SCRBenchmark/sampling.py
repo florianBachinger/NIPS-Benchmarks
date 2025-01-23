@@ -49,9 +49,20 @@ def simple_sampling(sample_size, min_value=0.0, max_value=1.0):
     # x ~ either U(0.0, 1.0) or U(-1.0, 0.) with 50% chance
     num_positives = sum(np.random.uniform(0.0, 1.0, size=sample_size) > 0.5)
     num_negatives = sample_size - num_positives
-    pos_samples = np.random.uniform(min_value, max_value, size=num_positives)
-    neg_samples = -np.random.uniform(min_value, max_value, size=num_negatives)
-    all_samples = np.concatenate([pos_samples, neg_samples])
+    if num_negatives>2:
+        neg_samples = -np.random.uniform(min_value, max_value, size=num_negatives-2)
+        neg_samples = np.concat([neg_samples, [-min_value, -max_value]])
+    else:
+        neg_samples = -np.random.uniform(min_value, max_value, size=num_negatives)
+
+    if num_positives>2:
+        pos_samples = np.random.uniform(min_value, max_value, size=num_positives-2)
+        neg_samples = np.concat([pos_samples, [min_value, max_value]])
+    else:
+        pos_samples = np.random.uniform(min_value, max_value, size=num_positives)
+    
+    all_samples = np.concat([neg_samples, pos_samples])
+    print("sampling",all_samples.shape, min_value, max_value)
     np.random.shuffle(all_samples)
     return all_samples
 
