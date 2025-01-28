@@ -57,12 +57,11 @@ def simple_sampling(sample_size, min_value=0.0, max_value=1.0):
 
     if num_positives>2:
         pos_samples = np.random.uniform(min_value, max_value, size=num_positives-2)
-        neg_samples = np.concat([pos_samples, [min_value, max_value]])
+        pos_samples = np.concat([pos_samples, [min_value, max_value]])
     else:
         pos_samples = np.random.uniform(min_value, max_value, size=num_positives)
     
     all_samples = np.concat([neg_samples, pos_samples])
-    print("sampling",all_samples.shape, min_value, max_value)
     np.random.shuffle(all_samples)
     return all_samples
 
